@@ -1,0 +1,18 @@
+{
+  "name": "usdt-mining-bot",
+  "version": "1.0.0",
+  "description": "Telegram USDT Mining Bot with Monetag ads",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js",
+    "dev": "nodemon bot.js"
+  },
+  "dependencies": {
+    "telegraf": "^4.16.3",
+    "better-sqlite3": "^9.4.3",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

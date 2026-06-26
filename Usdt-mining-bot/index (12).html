@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Watch Ad – USDT Miner</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<!-- ✅ Paste your Monetag zone script tag here -->
+<!-- <script src="https://your-monetag-zone.js"></script> -->
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0d0d1a;
+    color: #e0e0ff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+  }
+  .logo { font-size: 56px; margin-bottom: 16px; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+  h1 { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+  p.sub { font-size: 14px; color: #8888bb; margin-bottom: 32px; line-height: 1.5; }
+  .badge {
+    background: linear-gradient(135deg,#1a1a3e,#2a2a5e);
+    border: 1px solid #4444aa;
+    border-radius: 16px;
+    padding: 20px 32px;
+    margin-bottom: 32px;
+    font-size: 28px; font-weight: 800; color: #00e5ff;
+    box-shadow: 0 0 24px rgba(0,229,255,.15);
+  }
+  .badge span { display:block; font-size:13px; font-weight:400; color:#8888bb; margin-top:4px; }
+  button {
+    width: 100%; max-width: 320px; padding: 16px;
+    border: none; border-radius: 12px;
+    font-size: 17px; font-weight: 700; cursor: pointer; transition: all .2s;
+  }
+  #watch-btn {
+    background: linear-gradient(135deg,#00b4d8,#0077b6);
+    color: white; box-shadow: 0 4px 20px rgba(0,180,216,.35);
+  }
+  #watch-btn:hover { transform: translateY(-2px); }
+  #watch-btn:disabled { background:#333355; color:#666699; cursor:not-allowed; box-shadow:none; }
+  #claim-btn {
+    background: linear-gradient(135deg,#00c853,#009624);
+    color: white; box-shadow: 0 4px 20px rgba(0,200,83,.35); display:none;
+  }
+  #claim-btn:hover { transform: translateY(-2px); }
+  .progress-bar {
+    width:100%; max-width:320px; height:4px; background:#1a1a3e;
+    border-radius:2px; margin:16px 0; overflow:hidden; display:none;
+  }
+  .progress-fill {
+    height:100%; width:0%;
+    background: linear-gradient(90deg,#00b4d8,#00e5ff);
+    border-radius:2px; transition: width .1s linear;
+  }
+  .status { margin-top:20px; font-size:13px; color:#8888bb; min-height:20px; }
+</style>
+</head>
+<body>
+
+<div class="logo">⚡</div>
+<h1 id="title">Boost Your Hashrate</h1>
+<p class="sub" id="subtitle">Watch a short ad to earn extra GH/s<br>and speed up your USDT mining!</p>
+
+<div class="badge">
+  +<span id="reward-amount">1</span> GH/s
+  <span>added to your hashrate</span>
+</div>
+
+<button id="watch-btn" onclick="watchAd()">📺 Watch Ad</button>
+<div class="progress-bar" id="progress-bar">
+  <div class="progress-fill" id="progress-fill"></div>
+</div>
+<button id="claim-btn" onclick="claimReward()">✅ Claim +<span id="claim-label">1</span> GH/s</button>
+<p class="status" id="status"></p>
+
+<script>
+  const tg = window.Telegram.WebApp;
+  tg.expand();
+  tg.disableClosingConfirmation();
+
+  const params   = new URLSearchParams(window.location.search);
+  const reward   = parseInt(params.get('reward') || '1');
+  const cooldown = params.get('cooldown') === '1';
+
+  document.getElementById('reward-amount').textContent = reward;
+  document.getElementById('claim-label').textContent   = reward;
+
+  if (reward >= 3) {
+    document.getElementById('title').textContent    = '⚡ Hashrate Boost';
+    document.getElementById('subtitle').textContent = 'Watch a boost ad and supercharge\nyour USDT mining speed!';
+  }
+
+  let adWatched = false;
+
+  function watchAd() {
+    const btn    = document.getElementById('watch-btn');
+    const bar    = document.getElementById('progress-bar');
+    const fill   = document.getElementById('progress-fill');
+    const status = document.getElementById('status');
+
+    btn.disabled     = true;
+    btn.textContent  = '⏳ Loading ad...';
+    status.textContent = 'Please wait while the ad loads...';
+    bar.style.display  = 'block';
+
+    // ── Monetag integration ──────────────────────────────────────────────────
+    // Replace simulateAd() below with your actual Monetag ad call.
+    //
+    // Example (Monetag Interstitial):
+    //   window.__monetag.adv({
+    //     zoneId: YOUR_ZONE_ID,
+    //     onComplete: () => onAdComplete(fill, status)
+    //   });
+    //
+    // Call onAdComplete(fill, status) inside Monetag's completion callback.
+    // ────────────────────────────────────────────────────────────────────────
+    simulateAd(fill, status);
+  }
+
+  // REMOVE this — replace with real Monetag callback
+  function simulateAd(fill, status) {
+    let progress = 0;
+    const iv = setInterval(() => {
+      progress += 2;
+      fill.style.width = progress + '%';
+      if (progress >= 100) { clearInterval(iv); onAdComplete(fill, status); }
+    }, 60);
+  }
+
+  function onAdComplete(fill, status) {
+    adWatched = true;
+    fill.style.width = '100%';
+    status.textContent = '✅ Ad complete! Claim your reward below.';
+    document.getElementById('watch-btn').style.display  = 'none';
+    document.getElementById('claim-btn').style.display  = 'block';
+    document.getElementById('progress-bar').style.display = 'none';
+  }
+
+  function claimReward() {
+    if (!adWatched) return;
+    tg.sendData(JSON.stringify({ reward, cooldown }));
+    tg.close();
+  }
+</script>
+</body>
+</html>
